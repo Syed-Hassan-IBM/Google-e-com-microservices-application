@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adservice
+  labels:
+    app: adservice
+spec:
+  selector:
+    matchLabels:
+      app: adservice
+  template:
+    metadata:
+      name: adservice
+      labels:
+        app: adservice
+    spec:
+      containers:
+        - name: adservice
+          image: 9952268641/gcr:adservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9555
+          env:
+            - name: PORT
+              value: "9555"
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adservice
+spec:
+  selector:
+    app: adservice
+  type: ClusterIP
+  ports:
+    - port: 9555
+      targetPort: 9555
+      protocol: TCP

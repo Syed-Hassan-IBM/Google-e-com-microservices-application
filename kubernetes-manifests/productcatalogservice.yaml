@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productcatalogservice
+  labels:
+    app: productcatalogservice
+spec:
+  selector:
+    matchLabels:
+      app: productcatalogservice
+  template:
+    metadata:
+      name: productcatalogservice
+      labels:
+        app: productcatalogservice
+    spec:
+      containers:
+        - name: productcatalogservice
+          image: 9952268641/gcr:productcatalogservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3550
+          env:
+            - name: PORT
+              value: "3550"
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productcatalogservice
+spec:
+  selector:
+    app: productcatalogservice
+  type: ClusterIP
+  ports:
+    - port: 3550
+      targetPort: 3550
+      protocol: TCP

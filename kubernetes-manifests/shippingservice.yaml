@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shippingservice
+  labels:
+    app: shippingservice
+spec:
+  selector:
+    matchLabels:
+      app: shippingservice
+  template:
+    metadata:
+      name: shippingservice
+      labels:
+        app: shippingservice
+    spec:
+      containers:
+        - name: shippingservice
+          image: 9952268641/gcr:shippingservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 50051
+          env:
+            - name: PORT 
+              value: "50051"
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shippingservice
+spec:
+  selector:
+    app: shippingservice
+  type: ClusterIP
+  ports:
+    - port: 50051
+      targetPort: 50051
+      protocol: TCP

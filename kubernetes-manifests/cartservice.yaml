@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cartservice
+  labels:
+    app: cartservice
+spec:
+  selector:
+    matchLabels:
+      app: cartservice
+  template:
+    metadata:
+      name: cartservice
+      labels:
+        app: cartservice
+    spec:
+      containers:
+        - name: cartservice
+          image: 9952268641/gcr:cartservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7070
+          env:
+            - name: PORT
+              value: "7070"
+            - name: REDIS_ADDR
+              value: "redis:6379"
+          volumeMounts:
+            - mountPath: /data
+              name: redis
+      volumes:
+        - name: redis
+          emptyDir: {}
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cartservice
+spec:
+  selector:
+    app: cartservice
+  type: ClusterIP
+  ports:
+    - port: 7070
+      targetPort: 7070
+      protocol: TCP
